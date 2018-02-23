@@ -1,0 +1,80 @@
+#include "74hc595.h"
+
+// Функция вывода байта
+void reg_74hc595_byte(uint8_t data)
+{
+  for(uint8_t i = 0; i < 8; i++)
+  {
+    if((data << i) & 0x80)
+    {
+      R74HC595_DATA_1();
+    }
+    else
+    {
+      R74HC595_DATA_0();
+    }
+    R74HC595_CLK_1();
+    R74HC595_CLK_0();
+  }
+  R74HC595_SHIFT_1();
+  R74HC595_SHIFT_0();
+}
+
+// Функция вывода двух байт
+void reg_74hc595_word(uint16_t data)
+{
+  for(uint8_t i = 0; i < 16; i++)
+  {
+    if((data << i) & 0x8000)
+    {
+      R74HC595_DATA_1();
+    }
+    else
+    {
+      R74HC595_DATA_0();
+    }
+    R74HC595_CLK_1();
+    R74HC595_CLK_0();
+  }
+  R74HC595_SHIFT_1();
+  R74HC595_SHIFT_0();
+}
+
+
+void reg_74hc959_init(void)
+{
+	/* Enable GPIO */
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+		
+	/* Configure GPIOA1 as output, meduim speed, no pull-up, pull-down */
+	R74HC595_SHIFT_PORT->MODER 		&= 	~GPIO_MODER_MODER1_1;
+	R74HC595_SHIFT_PORT->MODER 		|= 	 GPIO_MODER_MODER1_0;
+	R74HC595_SHIFT_PORT->OTYPER		&= 	~GPIO_OTYPER_OT_1;
+	R74HC595_SHIFT_PORT->PUPDR 		&= 	~GPIO_PUPDR_PUPDR1;
+	R74HC595_SHIFT_PORT->OSPEEDR 	|= 	 GPIO_OSPEEDER_OSPEEDR1_0;
+	R74HC595_SHIFT_PORT->OSPEEDR 	&= 	~GPIO_OSPEEDER_OSPEEDR1_1;
+	
+		/* Configure GPIOA3 as output, meduim speed, no pull-up, pull-down */
+	R74HC595_CLK_PORT->MODER 		&= 	~GPIO_MODER_MODER3_1;
+	R74HC595_CLK_PORT->MODER 		|= 	 GPIO_MODER_MODER3_0;
+	R74HC595_CLK_PORT->OTYPER		&= 	~GPIO_OTYPER_OT_3;
+	R74HC595_CLK_PORT->PUPDR 		&= 	~GPIO_PUPDR_PUPDR3;
+	R74HC595_CLK_PORT->OSPEEDR 	|= 	 GPIO_OSPEEDER_OSPEEDR3_0;
+	R74HC595_CLK_PORT->OSPEEDR 	&= 	~GPIO_OSPEEDER_OSPEEDR3_1;
+	
+		/* Configure GPIOA3 as output, meduim speed, no pull-up, pull-down */
+	R74HC595_DATA_PORT->MODER 		&= 	~GPIO_MODER_MODER5_1;
+	R74HC595_DATA_PORT->MODER 		|= 	 GPIO_MODER_MODER5_0;
+	R74HC595_DATA_PORT->OTYPER		&= 	~GPIO_OTYPER_OT_5;
+	R74HC595_DATA_PORT->PUPDR 		&= 	~GPIO_PUPDR_PUPDR5;
+	R74HC595_DATA_PORT->OSPEEDR 	|= 	 GPIO_OSPEEDER_OSPEEDR5_0;
+	R74HC595_DATA_PORT->OSPEEDR 	&= 	~GPIO_OSPEEDER_OSPEEDR5_1;
+	
+	/* Configure GPIOA3 as output, meduim speed, no pull-up, pull-down */
+	R74HC595_DATA_PORT->MODER 		&= 	~GPIO_MODER_MODER7_1;
+	R74HC595_DATA_PORT->MODER 		|= 	 GPIO_MODER_MODER7_0;
+	R74HC595_DATA_PORT->OTYPER		&= 	~GPIO_OTYPER_OT_7;
+	R74HC595_DATA_PORT->PUPDR 		&= 	~GPIO_PUPDR_PUPDR7;
+	R74HC595_DATA_PORT->OSPEEDR 	|= 	 GPIO_OSPEEDER_OSPEEDR7_0;
+	R74HC595_DATA_PORT->OSPEEDR 	&= 	~GPIO_OSPEEDER_OSPEEDR7_1;
+}
